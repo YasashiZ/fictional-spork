@@ -1,0 +1,118 @@
+# -*- coding: utf-8 -*-
+
+# Define characters
+define xinxin = Character('xinxin', color="#E03B8B")
+define xinxin_possessed = Character('xinxin possessed', color="#be03fc")
+define ghost_waifu = Character('ghost waifu', color="#19cbe3")
+
+init python:
+    player_name = ""  # Define the variable to store the player's name
+
+# Game start
+label start:
+    # Game title and introduction
+    label background:
+    scene bg haunted house
+
+    "Welcome to Yūrei Gyanburu!"
+
+label bgm:
+    play music "bgm_onemptyfields.mp3"
+
+    # Let the player input their name
+    $ player_name = renpy.input("Please enter your name:")
+
+
+    # Click to continue button
+    menu:
+        "Click to continue":
+            jump explore_house
+
+# Explore the abandoned house
+label explore_house:
+    # Storyline: Ghost appears
+   
+    show ghost_waifu
+    "As the story unfolds, the ghost of a woman who had tragically ended her life due to a love affair appears, trapped in obsession with her past."
+
+    "The ghost approaches them, emitting a mournful wail, seemingly recounting her unfortunate fate endlessly through tears, her long hair covered her sunken eyes."
+
+    show xinxin
+    "To the husband's horror his wife was possessed by the ghost. The Ghost asked to play a game with them through his wife's voice."
+    show xinxin_possessed
+
+    menu:
+        "Choose to trust and stay":
+            jump trust_scene
+        "Choose to betray and flee":
+            jump betrayal_scene
+
+# Choose to trust each other
+label trust_scene:
+    
+    "[player_name] and Xinxin chose each other and decided to face the ghost together."
+
+    "Because of his decision to stay the ghost was reminded of her past and was moved."
+
+    "She said, 'If you win, I will let both of you go; if you lose, both of you will stay with me forever.'"
+    jump mini_game
+
+# Choose to betray
+label betrayal_scene:
+    
+    "[player_name] chose to betray Xinxin, leading to his own death at the hands of the ghost."
+    jump ending_bad
+
+# Mini-game scene
+label mini_game:
+    "Welcome to the Number Guessing Mini-Game!"
+    "I've chosen a number between 1 and 100. Can you guess what it is?"
+
+    # Generate a random number
+    $ target_number = renpy.random.randint(1, 100)
+    $ guess = 0
+    $ attempts = 0
+
+    # Loop until the player guesses the number or exceeds 10 attempts
+    while guess != target_number and attempts < 10:
+        $ guess = renpy.input("Please enter your guess:")
+        $ guess = int(guess)
+        $ attempts += 1
+
+        if guess < target_number:
+            "Your guess is too low. Please continue guessing."
+        elif guess > target_number:
+            "Your guess is too high. Please continue guessing."
+        else:
+            jump ghost_story_scene
+
+    # If player exceeds 10 attempts, show a sinister smile from the ghost and jump to bad ending
+    if attempts >= 10:
+        "The ghost gives a sinister smile..."
+        jump ending_bad
+
+# Ghost storytelling scene
+label ghost_story_scene:
+    
+    "Congratulations! The number is [target_number]."
+
+    "The ghost begins to tell her story, her sadness and obsession."
+
+    "[player_name] feels deeply moved and decides to help the ghost find peace."
+
+    "The ghost smiles gratefully and ascends to heaven."
+    jump ending_good
+
+# Ending scene 1: Good ending
+label ending_good:
+    
+    "With mutual help, trust, and courage, [player_name] and Xinxin successfully break free from the ghost's curse and regain their freedom."
+
+    "They finally leave the old house and start a new life."
+    return
+
+# Ending scene 2: Bad ending
+label ending_bad:
+   
+    "The bodies and souls of both husband and wife were taken away by the ghost. In the end, no one survived."
+    return
